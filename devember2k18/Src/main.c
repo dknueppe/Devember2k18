@@ -98,15 +98,21 @@ int main(void)
   MX_ADC1_Init();
   MX_DAC1_Init();
   /* USER CODE BEGIN 2 */
-
+  HAL_ADC_Start(&hadc1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    uint16_t adcVal;
     HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-    HAL_Delay(500);
+    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+    adcVal = HAL_ADC_GetValue(&hadc1);
+
+    HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, adcVal>>4);
+
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
