@@ -25,3 +25,6 @@ Today I set up the Tools necessary to flash and debug the Chip. And wrote a litt
 ### December fourth.
 I modified the Makefile to be able to compile C++ and duplicated a (slow) signal from the ADC on the DAC. Still needs
 verification that it actually works.
+
+### December fifth. 
+Not so much coding as reading Documents, I'll still count that. So next to try is A/D and D/A Conversion with DMA.
