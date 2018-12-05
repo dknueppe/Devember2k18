@@ -95,8 +95,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC1_Init();
   MX_DAC1_Init();
+  MX_ADC1_Init();
+  MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
   HAL_ADC_Start(&hadc1);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
