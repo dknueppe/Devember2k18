@@ -28,3 +28,6 @@ verification that it actually works.
 
 ### December fifth. 
 Not so much coding as reading Documents, I'll still count that. So next to try is A/D and D/A Conversion with DMA.
+
+### December sixth.
+I got a lovely *cough* crooked sinewave output. Also more reading :frowning: so can hopefully get some more speed into this. 
