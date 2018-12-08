@@ -95,9 +95,10 @@ int main(void)
   const double pi = std::acos(-1);
   const uint32_t& res = 36;
   uint32_t sine[res];
-  uint32_t* signalOutput = sine;
+  uint32_t test[res];
   for (uint32_t i = 0; i < res; i++){
     sine[i] = 2024 + 2000 * (std::sin(((2*pi)/res)*i));
+    test[i] = i;
   }
   /* USER CODE END SysInit */
 
@@ -109,18 +110,23 @@ int main(void)
   MX_ADC3_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 1);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
   HAL_ADC_Start(&hadc1);
   HAL_ADC_Start(&hadc3);
-  //HAL_DMA_Start(&hdma_dac1_ch1, &res, DAC1_BASE);
-  if(HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, signalOutput, DMA1_Stream0, DAC_ALIGN_12B_R) != HAL_OK);
-    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 0);
+  //if(HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, sine, res, DAC_ALIGN_12B_R) != HAL_OK)
+  //  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  //HAL_DMA_Start(&hdma_memtomem_dma1_stream1, (uint32_t)sine, (uint32_t)test, res);
+  HAL_DAC_Start(&hdac1, DAC1_CHANNEL_1);
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    for(int i = 0; i < res; i++){
+      HAL_DAC_SetValue(&hdac1, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
+    }
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
