@@ -95,6 +95,7 @@ int main(void)
   const double pi = std::acos(-1);
   const uint32_t& res = 36;
   uint32_t sine[res];
+  uint32_t* signalOutput = sine;
   for (uint32_t i = 0; i < res; i++){
     sine[i] = 2024 + 2000 * (std::sin(((2*pi)/res)*i));
   }
@@ -112,18 +113,14 @@ int main(void)
   HAL_ADC_Start(&hadc1);
   HAL_ADC_Start(&hadc3);
   //HAL_DMA_Start(&hdma_dac1_ch1, &res, DAC1_BASE);
-  HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, sine, res, DAC_ALIGN_12B_R);
+  if(HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, signalOutput, DMA1_Stream0, DAC_ALIGN_12B_R) != HAL_OK);
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    //HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    //adcVal = HAL_ADC_GetValue(&hadc1);
-    //for (unsigned int i = 0; i < res; i++){
-    //  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
-    //}
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
