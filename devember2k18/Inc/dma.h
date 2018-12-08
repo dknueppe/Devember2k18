@@ -49,8 +49,6 @@
 #include "main.h"
 
 /* DMA memory to memory transfer handles -------------------------------------*/
-extern DMA_HandleTypeDef hdma_memtomem_dma1_stream1;
-extern DMA_HandleTypeDef hdma_memtomem_dma1_stream2;
 extern void _Error_Handler(char*, int);
 
 /* USER CODE BEGIN Includes */

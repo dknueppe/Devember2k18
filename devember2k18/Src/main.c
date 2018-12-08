@@ -46,7 +46,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include <cmath>
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -92,12 +92,12 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  const double pi = std::acos(-1);
-  const uint32_t& res = 36;
+  const double pi = acos(-1);
+  const uint32_t res = 36;
   uint32_t sine[res];
   uint32_t test[res];
   for (uint32_t i = 0; i < res; i++){
-    sine[i] = 2024 + 2000 * (std::sin(((2*pi)/res)*i));
+    sine[i] = 2024 + 2000 * (sin(((2*pi)/res)*i));
     test[i] = i;
   }
   /* USER CODE END SysInit */
@@ -110,13 +110,13 @@ int main(void)
   MX_ADC3_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+  HAL_TIM_Base_Start(&htim6);
   HAL_ADC_Start(&hadc1);
   HAL_ADC_Start(&hadc3);
-  //if(HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, sine, res, DAC_ALIGN_12B_R) != HAL_OK)
-  //  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
-  //HAL_DMA_Start(&hdma_memtomem_dma1_stream1, (uint32_t)sine, (uint32_t)test, res);
-  HAL_DAC_Start(&hdac1, DAC1_CHANNEL_1);
+  if(HAL_DAC_Start_DMA(&hdac1, DAC1_CHANNEL_1, sine, res, DAC_ALIGN_12B_R) != HAL_OK){
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  }
   
   /* USER CODE END 2 */
 
@@ -124,9 +124,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    for(int i = 0; i < res; i++){
-      HAL_DAC_SetValue(&hdac1, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
-    }
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
