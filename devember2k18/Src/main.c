@@ -44,7 +44,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-#include <cmath>
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -74,7 +74,14 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  const double pi = acos(-1);
+  const int res = 18;
+  uint32_t sine[res];
+  for(int i = 0; i < res; i++){
+      sine[i] = 2028 + 2000 * (sin(((2*pi)/res)*i));
+  }
+  volatile uint32_t* DMA_BASE = 0x40020000;
+  volatile uint32_t* DAC_BASE = 0x40007400;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -102,24 +109,16 @@ int main(void)
   HAL_ADC_Start(&hadc1);
   HAL_ADC_Start(&hadc3);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, 1);
-  volatile uint16_t adcVal;
-  volatile unsigned int dacOut = 1 << 11;
-  const double pi = std::acos(-1);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    //HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-    //HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    //adcVal = HAL_ADC_GetValue(&hadc1);
-    for (unsigned int i = 0; i < 360; i++){
-      auto temp = 2048 + 2047 * (std::sin(((2*pi)/360)*i));
-      HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, temp);
+    for (unsigned int i = 0; i < res; i++){
+      HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
     }
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
