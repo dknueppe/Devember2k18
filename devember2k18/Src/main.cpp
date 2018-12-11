@@ -41,6 +41,8 @@
 #include "stm32h7xx_hal.h"
 #include "adc.h"
 #include "dac.h"
+#include "dma.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
@@ -59,7 +61,7 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void writeDAC();
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -75,10 +77,10 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   const double pi = acos(-1);
-  const int res = 18;
+  const int res = 9;
   uint32_t sine[res];
   for(int i = 0; i < res; i++){
-      sine[i] = 2028 + 2000 * (sin(((2*pi)/res)*i));
+      sine[i] = 2024 + 2000 * (sin(((2*pi)/res)*i));
   }
   volatile uint32_t* DMA_BASE = 0x40020000;
   volatile uint32_t* DAC_BASE = 0x40007400;
@@ -102,23 +104,30 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DAC1_Init();
-  MX_ADC1_Init();
+  MX_DMA_Init();
+  //MX_DAC1_Init();
+  //MX_ADC1_Init();
   MX_ADC3_Init();
+  MX_TIM6_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start(&hadc1);
-  HAL_ADC_Start(&hadc3);
-  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  //HAL_ADC_Start(&hadc1);
+  //HAL_ADC_Start(&hadc3);
+  //HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  int i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    for (unsigned int i = 0; i < res; i++){
-      HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
-    }
+    //for (unsigned int i = 0; i < res; i++){
+    //  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
+    //}
+    //i++;
+    //i = i % res;
+    //HAL_DAC_SetValue(&hdac1, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -208,6 +217,8 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_PLL1QCLK, RCC_MCODIV_1);
+
     /**Configure the Systick interrupt time 
     */
   HAL_SYSTICK_Config(SystemCoreClock/1000);
@@ -221,7 +232,12 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+//void writeDAC()
+//{
+//  uint32_t* DAC_CR = DAC_BASE;
+//  uint32_t* DAC_SWTRGR = DAC_BASE + 4;
+//  
+//}
 /* USER CODE END 4 */
 
 /**
