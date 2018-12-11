@@ -45,6 +45,7 @@
 
 /* USER CODE BEGIN Includes */
 #include <stdint.h>
+#include "stm32h743xx.h"
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
@@ -74,52 +75,54 @@ enum class dacChannel{DAC_CHANNEL1, DAC_CHANNEL2 = (1 << 16)};
 class DAC
 {
 private:
-  uint32_t volatile const* DAC_CR_ADDR      = (uint32_t*)(_DAC_BASE + 0x00);
-  uint32_t volatile const* DAC_SWTRGR_ADDR  = (uint32_t*)(_DAC_BASE + 0x04);
-  uint32_t volatile const* DAC_DHR12R1_ADDR = (uint32_t*)(_DAC_BASE + 0x08);
-  uint32_t volatile const* DAC_DHR12L1_ADDR = (uint32_t*)(_DAC_BASE + 0x0C);
-  uint32_t volatile const* DAC_DHR8R1_ADDR  = (uint32_t*)(_DAC_BASE + 0x10);
-  uint32_t volatile const* DAC_DHR12R2_ADDR = (uint32_t*)(_DAC_BASE + 0x14);
-  uint32_t volatile const* DAC_DHR12L2_ADDR = (uint32_t*)(_DAC_BASE + 0x18);
-  uint32_t volatile const* DAC_DHR8R2_ADDR  = (uint32_t*)(_DAC_BASE + 0x1C);
-  uint32_t volatile const* DAC_DHR12RD_ADDR = (uint32_t*)(_DAC_BASE + 0x20);
-  uint32_t volatile const* DAC_DHR12LD_ADDR = (uint32_t*)(_DAC_BASE + 0x24);
-  uint32_t volatile const* DAC_DHR8RD_ADDR  = (uint32_t*)(_DAC_BASE + 0x28);
-  uint32_t volatile const* DAC_DOR1_ADDR    = (uint32_t*)(_DAC_BASE + 0x2C);
-  uint32_t volatile const* DAC_DOR2_ADDR    = (uint32_t*)(_DAC_BASE + 0x30);
-  uint32_t volatile const* DAC_SR_ADDR      = (uint32_t*)(_DAC_BASE + 0x34);
-  uint32_t volatile const* DAC_CCR_ADDR     = (uint32_t*)(_DAC_BASE + 0x38);
-  uint32_t volatile const* DAC_MCR_ADDR     = (uint32_t*)(_DAC_BASE + 0x3C);
-  uint32_t volatile const* DAC_SHSR1_ADDR   = (uint32_t*)(_DAC_BASE + 0x40);
-  uint32_t volatile const* DAC_SHSR2_ADDR   = (uint32_t*)(_DAC_BASE + 0x44);
-  uint32_t volatile const* DAC_SHHR_ADDR    = (uint32_t*)(_DAC_BASE + 0x48);
-  uint32_t volatile const* DAC_SHRR_ADDR    = (uint32_t*)(_DAC_BASE + 0x4C);
-  uint32_t volatile const& DAC_CR           = *DAC_CR_ADDR;
-  uint32_t volatile const& DAC_SWTRGR       = *DAC_SWTRGR_ADDR;
-  uint32_t volatile const& DAC_DHR12R1      = *DAC_DHR12R1_ADDR;
-  uint32_t volatile const& DAC_DHR12L1      = *DAC_DHR12L1_ADDR;
-  uint32_t volatile const& DAC_DHR8R1       = *DAC_DHR8R1_ADDR;
-  uint32_t volatile const& DAC_DHR12R2      = *DAC_DHR12R2_ADDR;
-  uint32_t volatile const& DAC_DHR12L2      = *DAC_DHR12L2_ADDR;
-  uint32_t volatile const& DAC_DHR8R2       = *DAC_DHR8R2_ADDR;
-  uint32_t volatile const& DAC_DHR12RD      = *DAC_DHR12RD_ADDR;
-  uint32_t volatile const& DAC_DHR12LD      = *DAC_DHR12LD_ADDR;
-  uint32_t volatile const& DAC_DHR8RD       = *DAC_DHR8RD_ADDR;
-  uint32_t volatile const& DAC_DOR1         = *DAC_DOR1_ADDR;
-  uint32_t volatile const& DAC_DOR2         = *DAC_DOR2_ADDR;
-  uint32_t volatile const& DAC_SR           = *DAC_SR_ADDR;
-  uint32_t volatile const& DAC_CCR          = *DAC_CCR_ADDR;
-  uint32_t volatile const& DAC_MCR          = *DAC_MCR_ADDR;
-  uint32_t volatile const& DAC_SHSR1        = *DAC_SHSR1_ADDR;
-  uint32_t volatile const& DAC_SHSR2        = *DAC_SHSR2_ADDR;
-  uint32_t volatile const& DAC_SHHR         = *DAC_SHHR_ADDR;
-  uint32_t volatile const& DAC_SHRR         = *DAC_SHRR_ADDR;
+  uint32_t volatile* DAC_CR_ADDR      = (uint32_t*)(_DAC_BASE + 0x00);
+  uint32_t volatile* DAC_SWTRGR_ADDR  = (uint32_t*)(_DAC_BASE + 0x04);
+  uint32_t volatile* DAC_DHR12R1_ADDR = (uint32_t*)(_DAC_BASE + 0x08);
+  uint32_t volatile* DAC_DHR12L1_ADDR = (uint32_t*)(_DAC_BASE + 0x0C);
+  uint32_t volatile* DAC_DHR8R1_ADDR  = (uint32_t*)(_DAC_BASE + 0x10);
+  uint32_t volatile* DAC_DHR12R2_ADDR = (uint32_t*)(_DAC_BASE + 0x14);
+  uint32_t volatile* DAC_DHR12L2_ADDR = (uint32_t*)(_DAC_BASE + 0x18);
+  uint32_t volatile* DAC_DHR8R2_ADDR  = (uint32_t*)(_DAC_BASE + 0x1C);
+  uint32_t volatile* DAC_DHR12RD_ADDR = (uint32_t*)(_DAC_BASE + 0x20);
+  uint32_t volatile* DAC_DHR12LD_ADDR = (uint32_t*)(_DAC_BASE + 0x24);
+  uint32_t volatile* DAC_DHR8RD_ADDR  = (uint32_t*)(_DAC_BASE + 0x28);
+  uint32_t volatile* DAC_DOR1_ADDR    = (uint32_t*)(_DAC_BASE + 0x2C);
+  uint32_t volatile* DAC_DOR2_ADDR    = (uint32_t*)(_DAC_BASE + 0x30);
+  uint32_t volatile* DAC_SR_ADDR      = (uint32_t*)(_DAC_BASE + 0x34);
+  uint32_t volatile* DAC_CCR_ADDR     = (uint32_t*)(_DAC_BASE + 0x38);
+  uint32_t volatile* DAC_MCR_ADDR     = (uint32_t*)(_DAC_BASE + 0x3C);
+  uint32_t volatile* DAC_SHSR1_ADDR   = (uint32_t*)(_DAC_BASE + 0x40);
+  uint32_t volatile* DAC_SHSR2_ADDR   = (uint32_t*)(_DAC_BASE + 0x44);
+  uint32_t volatile* DAC_SHHR_ADDR    = (uint32_t*)(_DAC_BASE + 0x48);
+  uint32_t volatile* DAC_SHRR_ADDR    = (uint32_t*)(_DAC_BASE + 0x4C);
+  uint32_t volatile& DAC_CR           = *DAC_CR_ADDR;
+  uint32_t volatile& DAC_SWTRGR       = *DAC_SWTRGR_ADDR;
+  uint32_t volatile& DAC_DHR12R1      = *DAC_DHR12R1_ADDR;
+  uint32_t volatile& DAC_DHR12L1      = *DAC_DHR12L1_ADDR;
+  uint32_t volatile& DAC_DHR8R1       = *DAC_DHR8R1_ADDR;
+  uint32_t volatile& DAC_DHR12R2      = *DAC_DHR12R2_ADDR;
+  uint32_t volatile& DAC_DHR12L2      = *DAC_DHR12L2_ADDR;
+  uint32_t volatile& DAC_DHR8R2       = *DAC_DHR8R2_ADDR;
+  uint32_t volatile& DAC_DHR12RD      = *DAC_DHR12RD_ADDR;
+  uint32_t volatile& DAC_DHR12LD      = *DAC_DHR12LD_ADDR;
+  uint32_t volatile& DAC_DHR8RD       = *DAC_DHR8RD_ADDR;
+  uint32_t volatile& DAC_DOR1         = *DAC_DOR1_ADDR;
+  uint32_t volatile& DAC_DOR2         = *DAC_DOR2_ADDR;
+  uint32_t volatile& DAC_SR           = *DAC_SR_ADDR;
+  uint32_t volatile& DAC_CCR          = *DAC_CCR_ADDR;
+  uint32_t volatile& DAC_MCR          = *DAC_MCR_ADDR;
+  uint32_t volatile& DAC_SHSR1        = *DAC_SHSR1_ADDR;
+  uint32_t volatile& DAC_SHSR2        = *DAC_SHSR2_ADDR;
+  uint32_t volatile& DAC_SHHR         = *DAC_SHHR_ADDR;
+  uint32_t volatile& DAC_SHRR         = *DAC_SHRR_ADDR;
 public:
   void enableChannel(dacChannel chan);
   void disableChannel(dacChannel chan);
   void setTrigger(dacTrigger trig, dacChannel chan);
   void unsetTrigger(dacChannel chan);
-
+  void run(dacChannel chan);
+  void setVal(uint32_t val, dacChannel chan);
+  void reset();
 };
 }
 /* USER CODE END Private defines */

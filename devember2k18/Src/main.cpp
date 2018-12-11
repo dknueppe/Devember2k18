@@ -65,6 +65,78 @@ void writeDAC();
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void stm32::DAC::enableChannel(stm32::dacChannel chan)
+{
+    this->DAC_CR |= (uint32_t)chan;
+}
+
+void stm32::DAC::disableChannel(stm32::dacChannel chan)
+{
+    this->DAC_CR &= ~(uint32_t)chan;
+}
+
+void stm32::DAC::setTrigger(stm32::dacTrigger trig, stm32::dacChannel chan)
+{
+    switch(chan) {
+        case stm32::dacChannel::DAC_CHANNEL1:
+            this->DAC_CR |= ((uint32_t)trig << 2);
+            this->DAC_CR |= (1 << 0);
+            break;
+        case stm32::dacChannel::DAC_CHANNEL2:
+            this->DAC_CR |= ((uint32_t)trig << 18);
+            this->DAC_CR |= (1 << 16);
+            break;
+        default:
+            break;
+    }
+}
+
+void stm32::DAC::unsetTrigger(stm32::dacChannel chan)
+{
+    switch(chan) {
+        case stm32::dacChannel::DAC_CHANNEL1:
+            this->DAC_CR &= ~(0xF << 2);
+            this->DAC_CR &= ~(1 << 0);
+        case stm32::dacChannel::DAC_CHANNEL2:
+            this->DAC_CR &= ~(0xF << 18);
+            this->DAC_CR &= ~(1 << 16);
+    }
+}
+
+void stm32::DAC::run(stm32::dacChannel chan)
+{
+    switch (chan){
+        case stm32::dacChannel::DAC_CHANNEL1:
+            this->DAC_SWTRGR |= 1;
+            break;
+        case stm32::dacChannel::DAC_CHANNEL2:
+            this->DAC_SWTRGR |= 2;
+            break;
+        default:
+            break;
+    }
+}
+
+void stm32::DAC::setVal(uint32_t val, stm32::dacChannel chan)
+{
+    this->setTrigger(stm32::dacTrigger::SWTRIG, stm32::dacChannel::DAC_CHANNEL1);
+    switch(chan){
+        case stm32::dacChannel::DAC_CHANNEL1:
+            this->DAC_DHR12R1 = val;
+            break;
+        case stm32::dacChannel::DAC_CHANNEL2:
+            this->DAC_DHR12R2 = val;
+            break;
+        default:
+            break;
+    }
+    this->run(chan);
+}
+
+void stm32::DAC::reset()
+{
+    this->DAC_CR = 0;
+}
 
 /* USER CODE END 0 */
 
@@ -77,7 +149,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   const double pi = acos(-1);
-  const int res = 9;
+  const int res = 360;
   uint32_t sine[res];
   for(int i = 0; i < res; i++){
       sine[i] = 2024 + 2000 * (sin(((2*pi)/res)*i));
@@ -105,17 +177,22 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  //MX_DAC1_Init();
-  //MX_ADC1_Init();
+  MX_DAC1_Init();
+  MX_ADC1_Init();
   MX_ADC3_Init();
   MX_TIM6_Init();
   MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
   //HAL_ADC_Start(&hadc1);
   //HAL_ADC_Start(&hadc3);
-  //HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+  HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
-  int i = 0;
+  //stm32::DAC myDAC;
+  //myDAC.reset();
+  //myDAC.enableChannel(stm32::dacChannel::DAC_CHANNEL1);
+  //myDAC.setTrigger(stm32::dacTrigger::SWTRIG, stm32::dacChannel::DAC_CHANNEL1);
+  //myDAC.setVal(255, stm32::dacChannel::DAC_CHANNEL1);
+  HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 255);
   /* USER CODE END 2 */
 
   /* Infinite loop */
