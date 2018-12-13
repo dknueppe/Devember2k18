@@ -6,10 +6,12 @@
     "configurations": [
         {
             "name": "Cortex Debug",
+            "device": "STM32H7X3",
             "cwd": "${workspaceRoot}",
             "executable": "./build/devember2k18.elf",
             "request": "launch",
             "type": "cortex-debug",
+            "svdFile": "${workspaceRoot}/STM32H7x3.svd",
             "servertype": "openocd",
             "configFiles": [
                 "/home/d/openocd/tcl/board/st_nucleo_h743zi.cfg"

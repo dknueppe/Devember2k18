@@ -45,6 +45,7 @@
 
 /* USER CODE BEGIN Includes */
 #include <math.h>
+#include "stm32h743xx.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -58,8 +59,8 @@
 void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
+void DAC_Init();
 /* Private function prototypes -----------------------------------------------*/
-
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -80,8 +81,6 @@ int main(void)
   for(int i = 0; i < res; i++){
       sine[i] = 2028 + 2000 * (sin(((2*pi)/res)*i));
   }
-  volatile uint32_t* DMA_BASE = 0x40020000;
-  volatile uint32_t* DAC_BASE = 0x40007400;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -103,6 +102,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DAC1_Init();
+  DAC_Init();
   MX_ADC1_Init();
   MX_ADC3_Init();
   /* USER CODE BEGIN 2 */
@@ -110,6 +110,8 @@ int main(void)
   HAL_ADC_Start(&hadc3);
   HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
   HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+  GPIOB->BSRRH = GPIO_PIN_7;
+  GPIOB->BSRRL = GPIO_PIN_7;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,7 +119,9 @@ int main(void)
   while (1)
   {
     for (unsigned int i = 0; i < res; i++){
-      HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
+      //HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
+      DAC1->DHR12R1 = sine[i];
+      HAL_Delay(1);
     }
   /* USER CODE END WHILE */
 
@@ -221,7 +225,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void DAC_Init()
+{
+    DAC1->CR |= DAC_CR_EN1;
+}
 /* USER CODE END 4 */
 
 /**
