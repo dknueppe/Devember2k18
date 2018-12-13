@@ -76,7 +76,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   const double pi = acos(-1);
-  const int res = 18;
+  const int res = 36;
   uint32_t sine[res];
   for(int i = 0; i < res; i++){
       sine[i] = 2028 + 2000 * (sin(((2*pi)/res)*i));
@@ -121,7 +121,6 @@ int main(void)
     for (unsigned int i = 0; i < res; i++){
       //HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, sine[i]);
       DAC1->DHR12R1 = sine[i];
-      HAL_Delay(1);
     }
   /* USER CODE END WHILE */
 
