@@ -22,7 +22,7 @@ TARGET = devember2k18
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Og
+OPT = -O3
 
 
 #######################################
@@ -37,33 +37,33 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Src/main.c \
-Src/gpio.c \
-Src/adc.c \
-Src/dac.c \
-Src/stm32h7xx_it.c \
-Src/stm32h7xx_hal_msp.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dac.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dac_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c \
-Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c \
 Src/system_stm32h7xx.c
+#Src/gpio.c \
+#Src/adc.c \
+#Src/dac.c \
+#Src/stm32h7xx_it.c \
+#Src/stm32h7xx_hal_msp.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_cortex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dac.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dac_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_flash_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_hsem.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_dma_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_mdma.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_pwr_ex.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c.c \
+#Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_i2c_ex.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -77,13 +77,13 @@ PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
 ifdef GCC_PATH
-CC = $(GCC_PATH)/$(PREFIX)gcc
-AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
+CC = $(GCC_PATH)/$(PREFIX)g++
+AS = $(GCC_PATH)/$(PREFIX)g++ -x assembler-with-cpp
 CP = $(GCC_PATH)/$(PREFIX)objcopy
 SZ = $(GCC_PATH)/$(PREFIX)size
 else
-CC = $(PREFIX)gcc
-AS = $(PREFIX)gcc -x assembler-with-cpp
+CC = $(PREFIX)g++
+AS = $(PREFIX)g++ -x assembler-with-cpp
 CP = $(PREFIX)objcopy
 SZ = $(PREFIX)size
 endif
@@ -111,8 +111,8 @@ AS_DEFS =
 
 # C defines
 C_DEFS =  \
--DUSE_HAL_DRIVER \
 -DSTM32H743xx
+#-DUSE_HAL_DRIVER \
 
 
 # AS includes
