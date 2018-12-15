@@ -22,7 +22,7 @@ TARGET = devember2k18
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -O3
+OPT = -Og
 
 
 #######################################
