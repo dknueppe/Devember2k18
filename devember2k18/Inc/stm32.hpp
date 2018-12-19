@@ -18,4 +18,10 @@ class UtilModule
     public:
     T id;
 };
+
+struct sample12
+{
+    uint16_t sample : 12;
+    uint16_t        :  4;
+};
 }

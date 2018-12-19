@@ -7,6 +7,15 @@
 namespace stm32 
 {
 
+class dacSample : sample12
+{
+    public:
+    void operator=(double i)
+    {
+        sample = 0xFFF & (uint16_t)i;
+    }
+};
+
 enum triggerSelect {SWTRIG,    TIM1_TRGO, TIM2_TRGO,
                     TIM3_TRGO, TIM4_TRGO, TIM5_TRGO,
                     TIM6_TRGO, TIM7_TRGO, TIM8_TRGO,
@@ -37,8 +46,8 @@ union dacType
         const volatile uint32_t /* unused */        :  1;
         const volatile uint32_t /* unused */        : 30;
         //DAC_DHR12R1
-        volatile uint32_t dataHoldR                 : 12;
-        const volatile uint32_t /* unused */        : 20;
+        volatile dacSample dataHoldR;//             : 12;
+        const volatile uint16_t /* unused */        : 16;
         //DAC_DHR12L1
         const volatile uint32_t /* unused */        :  4;
         volatile uint32_t dataHoldL                 : 12;
@@ -116,8 +125,8 @@ union dacType
 
         const volatile uint32_t /* unused */        : 32;
 
-        volatile uint32_t dataHoldR                 : 12;
-        const volatile uint32_t /* unused */        : 20;
+        volatile dacSample dataHoldR;//             : 12;
+        const volatile uint16_t /* unused */        : 16;
 
         const volatile uint32_t /* unused */        :  4;
         volatile uint32_t dataHoldL                 : 12;
@@ -172,12 +181,12 @@ union dacType
     } channel2;
 };
 
-class DAC : McuModule<dacType>
+class DAC //: McuModule<dacType>
 {
     public:
     DAC()
     {
-        baseAddr = (dacType*)DAC1_BASE;
+        baseAddr = ((dacType*)((uint32_t)0x40007400));
         enable();
     }
 
@@ -188,6 +197,9 @@ class DAC : McuModule<dacType>
     void disableChannel1(){baseAddr->channel1.enable = false;}
     void disableChannel2(){baseAddr->channel2.enable = false;}
 
-    dacType& Register = *baseAddr;
+    volatile dacType& Register = *baseAddr;
+
+    private:
+    dacType* baseAddr; 
 };
 }

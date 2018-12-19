@@ -22,7 +22,7 @@ TARGET = devember2k18
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Og
+OPT = -O1 -g
 
 
 #######################################
@@ -128,9 +128,9 @@ C_INCLUDES =  \
 
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections# -fpermissive -fno-rtti -fno-exceptions
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -fpermissive -fno-rtti -fno-exceptions
 
-CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections# -fpermissive -fno-rtti -fno-exceptions
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -fpermissive -fno-rtti -fno-exceptions
 
 ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
