@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stm32h743xx.h"
+
 namespace stm32
 {
 
@@ -10,11 +12,10 @@ class McuModule
     T* baseAddr;
 };
 
-enum moduleID {RCC, TIM1};
-
 template<typename T>
 class UtilModule
 {
     public:
     T id;
 };
+}

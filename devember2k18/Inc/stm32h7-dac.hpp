@@ -2,9 +2,11 @@
 
 #include <stdint.h>
 #include "stm32.hpp"
+#include "stm32h743xx.h"
 
 namespace stm32 
 {
+
 enum triggerSelect {SWTRIG,    TIM1_TRGO, TIM2_TRGO,
                     TIM3_TRGO, TIM4_TRGO, TIM5_TRGO,
                     TIM6_TRGO, TIM7_TRGO, TIM8_TRGO,
@@ -170,15 +172,22 @@ union dacType
     } channel2;
 };
 
-class DAC : McuModule<dacType>, dacType
+class DAC : McuModule<dacType>
 {
     public:
-    DAC(){baseAddr = (dacType*)DAC1;};
+    DAC()
+    {
+        baseAddr = (dacType*)DAC1_BASE;
+        enable();
+    }
 
-    DAC* operator->(){return this->baseAddr};
-    void enable(){RCC->APB1LENR |= RCC_APB1LENR_DAC12EN};
+    void enable(){RCC->APB1LENR |= RCC_APB1LENR_DAC12EN;}
+    void disable(){RCC->APB1LENR &= ~(RCC_APB1LENR_DAC12EN);}
+    void enableChannel1(){baseAddr->channel1.enable = true;}
+    void enableChannel2(){baseAddr->channel2.enable = true;}
+    void disableChannel1(){baseAddr->channel1.enable = false;}
+    void disableChannel2(){baseAddr->channel2.enable = false;}
 
-
-
+    dacType& Register = *baseAddr;
 };
 }
