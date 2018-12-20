@@ -1,19 +1,15 @@
 #pragma once
 
 #include <stdint.h>
+#include <type_traits>
 #include "stm32.hpp"
 #include "stm32h743xx.h"
 
 namespace stm32 
 {
 
-class dacSample : sample12
+struct dacSample : sample12
 {
-    public:
-    void operator=(double i)
-    {
-        sample = 0xFFF & (uint16_t)i;
-    }
 };
 
 enum triggerSelect {SWTRIG,    TIM1_TRGO, TIM2_TRGO,
@@ -26,169 +22,173 @@ enum waveSelect {waveDisabled, noiseGen, triangleGen};
 
 enum outputSelect {extBuf, extOnBuf, extNobuf, onNobuf};
 
-union dacType
+class DacChannel {};
+
+struct chan1
 {
-    struct 
-    {
-        //DAC_CR
-        volatile uint32_t enable                    :  1;
-        volatile uint32_t enableTrig                :  1;
-        volatile triggerSelect selectTrig           :  4;
-        volatile waveSelect selectWave              :  2;
-        volatile uint32_t selectAmplitude           :  4;
-        volatile uint32_t enableDma                 :  1;
-        volatile uint32_t enableDmaUnderrunInterrupt:  1;
-        volatile uint32_t enableCalibration         :  1;
-        const volatile uint32_t /* unused */        :  1;
-        const volatile uint32_t /* unused */        : 16;
-        //DAC_SWTRGR
-        volatile uint32_t setSoftwareTrigger        :  1;
-        const volatile uint32_t /* unused */        :  1;
-        const volatile uint32_t /* unused */        : 30;
-        //DAC_DHR12R1
-        volatile dacSample dataHoldR;//             : 12;
-        const volatile uint16_t /* unused */        : 16;
-        //DAC_DHR12L1
-        const volatile uint32_t /* unused */        :  4;
-        volatile uint32_t dataHoldL                 : 12;
-        const volatile uint32_t /* unused */        : 16;
-        //DAC_DHR8R1
-        volatile uint32_t dataHold8                 :  8;
-        const volatile uint32_t /* unused */        : 24;
-        //DAC_DHR12R2
-        const volatile uint32_t /* unused */        : 32;
-        //DAC_DHR12L2
-        const volatile uint32_t /* unused */        : 32;
-        //DAC_DHR8R2
-        const volatile uint32_t /* unused */        : 32;
-        //DAC_DHR12RD
-        volatile uint32_t dataHoldDualR             : 12;
-        const volatile uint32_t /* unused */        : 20;
-        //DAC_DHR12LD
-        const volatile uint32_t /* unused */        :  4;
-        volatile uint32_t dataHoldDualL             : 12;
-        const volatile uint32_t /* unused */        : 16;
-        //DAC_DHR8RD
-        volatile uint32_t dataHoldDual8             :  8;
-        const volatile uint32_t /* unused */        : 24;
-        //DAC_DOR1
-        const volatile uint32_t dataOut             : 12;
-        const volatile uint32_t /* unused */        : 20;
-        //DAC_DOR2
-        const volatile uint32_t /* unused */        : 32;
-        //DAC_SR
-        const volatile uint32_t /* unused */        : 13;
-        const volatile uint32_t dmaUnderrunFlag     :  1;
-        const volatile uint32_t calibGreaterEqual   :  1;
-        const volatile uint32_t busyWritingSample   :  1;
-        const volatile uint32_t /* unused */        : 16;
-        //DAC_CCR
-        volatile uint32_t offsetTrim                :  4;
-        const volatile uint32_t /* unused */        : 28;
-        //DAC_MCR
-        volatile outputSelect selectOutput          :  2;
-        volatile uint32_t sampleHoldMode            :  1;
-        const volatile uint32_t /* unused */        : 29;
-        //DAC_SHSR1
-        volatile uint32_t dataSample                : 10;
-        const volatile uint32_t /* unused */        : 22;
-        //DAC_SHSR2
-        const volatile uint32_t /* unused */        : 32;
-        //DAC_SHHR
-        volatile uint32_t holdTime                  : 10;
-        const volatile uint32_t /* unused */        : 22;
-        //DAC_SHRR
-        volatile uint32_t refreshTime               :  8;
-        const volatile uint32_t /* unused */        : 24;
-    } channel1;
-    
-    struct 
-    {
-        const volatile uint32_t /* unused */        : 16;
-        volatile uint32_t enable                    :  1;
-        volatile uint32_t enableTrig                :  1;
-        volatile triggerSelect selectTrig           :  4;
-        volatile waveSelect selectWave              :  2;
-        volatile uint32_t selectAmplitude           :  4;
-        volatile uint32_t enableDma                 :  1;
-        volatile uint32_t enableDmaUnderrunInterrupt:  1;
-        volatile uint32_t enableCalibration         :  1;
-        const volatile uint32_t /* unused */        :  1;
-
-        const volatile uint32_t /* unused */        :  1;
-        volatile uint32_t setSoftwareTrigger        :  1;
-        const volatile uint32_t /* unused */        : 30;
-
-        const volatile uint32_t /* unused */        : 32;
-
-        const volatile uint32_t /* unused */        : 32;
-
-        const volatile uint32_t /* unused */        : 32;
-
-        volatile dacSample dataHoldR;//             : 12;
-        const volatile uint16_t /* unused */        : 16;
-
-        const volatile uint32_t /* unused */        :  4;
-        volatile uint32_t dataHoldL                 : 12;
-        const volatile uint32_t /* unused */        : 16;
-
-        volatile uint32_t dataHold8                 :  8;
-        const volatile uint32_t /* unused */        : 24;
-
-        const volatile uint32_t /* unused */        : 16;
-        volatile uint32_t dataHoldDualR             : 12;
-        const volatile uint32_t /* unused */        :  4;
-
-        const volatile uint32_t /* unused */        : 20;
-        volatile uint32_t dataHoldDualL             : 12;
-
-        const volatile uint32_t /* unused */        :  8;
-        volatile uint32_t dataHoldDual8             :  8;
-        const volatile uint32_t /* unused */        : 16;
-
-        const volatile uint32_t /* unused */        : 32;
-
-        const volatile uint32_t dataOut             : 12;
-        const volatile uint32_t /* unused */        : 20;
-
-        const volatile uint32_t /* unused */        : 13;
-        const volatile uint32_t /* unused */        : 16;
-        const volatile uint32_t dmaUnderrunFlag     :  1;
-        const volatile uint32_t calibGreaterEqual   :  1;
-        const volatile uint32_t busyWritingSample   :  1;
-
-        const volatile uint32_t /* unused */        : 16;
-        volatile uint32_t offsetTrim                :  4;
-        const volatile uint32_t /* unused */        : 12;
-
-        const volatile uint32_t /* unused */        : 16;
-        volatile outputSelect selectOutput          :  2;
-        volatile uint32_t sampleHoldMode            :  1;
-        const volatile uint32_t /* unused */        : 13;
-
-        const volatile uint32_t /* unused */        : 32;
-
-        volatile uint32_t dataSample                : 10;
-        const volatile uint32_t /* unused */        : 22;
-
-        const volatile uint32_t /* unused */        : 16;
-        volatile uint32_t holdTime                  : 10;
-        const volatile uint32_t /* unused */        :  6;
-
-        const volatile uint32_t /* unused */        : 16;
-        volatile uint32_t refreshTime               :  8;
-        const volatile uint32_t /* unused */        :  8;
-    } channel2;
+    //DAC_CR
+    volatile uint32_t enable                    :  1;
+    volatile uint32_t enableTrig                :  1;
+    volatile triggerSelect selectTrig           :  4;
+    volatile waveSelect selectWave              :  2;
+    volatile uint32_t selectAmplitude           :  4;
+    volatile uint32_t enableDma                 :  1;
+    volatile uint32_t enableDmaUnderrunInterrupt:  1;
+    volatile uint32_t enableCalibration         :  1;
+    const volatile uint32_t /* unused */        :  1;
+    const volatile uint32_t /* unused */        : 16;
+    //DAC_SWTRGR
+    volatile uint32_t setSoftwareTrigger        :  1;
+    const volatile uint32_t /* unused */        :  1;
+    const volatile uint32_t /* unused */        : 30;
+    //DAC_DHR12R1
+    volatile uint16_t dataHoldR;//             : 12;
+    const volatile uint16_t /* unused */        : 16;
+    //DAC_DHR12L1
+    const volatile uint32_t /* unused */        :  4;
+    volatile uint32_t dataHoldL                 : 12;
+    const volatile uint32_t /* unused */        : 16;
+    //DAC_DHR8R1
+    volatile uint32_t dataHold8                 :  8;
+    const volatile uint32_t /* unused */        : 24;
+    //DAC_DHR12R2
+    const volatile uint32_t /* unused */        : 32;
+    //DAC_DHR12L2
+    const volatile uint32_t /* unused */        : 32;
+    //DAC_DHR8R2
+    const volatile uint32_t /* unused */        : 32;
+    //DAC_DHR12RD
+    volatile uint32_t dataHoldDualR             : 12;
+    const volatile uint32_t /* unused */        : 20;
+    //DAC_DHR12LD
+    const volatile uint32_t /* unused */        :  4;
+    volatile uint32_t dataHoldDualL             : 12;
+    const volatile uint32_t /* unused */        : 16;
+    //DAC_DHR8RD
+    volatile uint32_t dataHoldDual8             :  8;
+    const volatile uint32_t /* unused */        : 24;
+    //DAC_DOR1
+    const volatile uint32_t dataOut             : 12;
+    const volatile uint32_t /* unused */        : 20;
+    //DAC_DOR2
+    const volatile uint32_t /* unused */        : 32;
+    //DAC_SR
+    const volatile uint32_t /* unused */        : 13;
+    const volatile uint32_t dmaUnderrunFlag     :  1;
+    const volatile uint32_t calibGreaterEqual   :  1;
+    const volatile uint32_t busyWritingSample   :  1;
+    const volatile uint32_t /* unused */        : 16;
+    //DAC_CCR
+    volatile uint32_t offsetTrim                :  4;
+    const volatile uint32_t /* unused */        : 28;
+    //DAC_MCR
+    volatile outputSelect selectOutput          :  2;
+    volatile uint32_t sampleHoldMode            :  1;
+    const volatile uint32_t /* unused */        : 29;
+    //DAC_SHSR1
+    volatile uint32_t dataSample                : 10;
+    const volatile uint32_t /* unused */        : 22;
+    //DAC_SHSR2
+    const volatile uint32_t /* unused */        : 32;
+    //DAC_SHHR
+    volatile uint32_t holdTime                  : 10;
+    const volatile uint32_t /* unused */        : 22;
+    //DAC_SHRR
+    volatile uint32_t refreshTime               :  8;
+    const volatile uint32_t /* unused */        : 24;
 };
 
-class DAC //: McuModule<dacType>
+struct chan2
+{
+    const volatile uint32_t /* unused */        : 16;
+    volatile uint32_t enable                    :  1;
+    volatile uint32_t enableTrig                :  1;
+    volatile triggerSelect selectTrig           :  4;
+    volatile waveSelect selectWave              :  2;
+    volatile uint32_t selectAmplitude           :  4;
+    volatile uint32_t enableDma                 :  1;
+    volatile uint32_t enableDmaUnderrunInterrupt:  1;
+    volatile uint32_t enableCalibration         :  1;
+    const volatile uint32_t /* unused */        :  1;
+
+    const volatile uint32_t /* unused */        :  1;
+    volatile uint32_t setSoftwareTrigger        :  1;
+    const volatile uint32_t /* unused */        : 30;
+
+    const volatile uint32_t /* unused */        : 32;
+
+    const volatile uint32_t /* unused */        : 32;
+
+    const volatile uint32_t /* unused */        : 32;
+
+    volatile uint16_t dataHoldR;//             : 12;
+    const volatile uint16_t /* unused */        : 16;
+
+    const volatile uint32_t /* unused */        :  4;
+    volatile uint32_t dataHoldL                 : 12;
+    const volatile uint32_t /* unused */        : 16;
+
+    volatile uint32_t dataHold8                 :  8;
+    const volatile uint32_t /* unused */        : 24;
+
+    const volatile uint32_t /* unused */        : 16;
+    volatile uint32_t dataHoldDualR             : 12;
+    const volatile uint32_t /* unused */        :  4;
+
+    const volatile uint32_t /* unused */        : 20;
+    volatile uint32_t dataHoldDualL             : 12;
+
+    const volatile uint32_t /* unused */        :  8;
+    volatile uint32_t dataHoldDual8             :  8;
+    const volatile uint32_t /* unused */        : 16;
+
+    const volatile uint32_t /* unused */        : 32;
+
+    const volatile uint32_t dataOut             : 12;
+    const volatile uint32_t /* unused */        : 20;
+
+    const volatile uint32_t /* unused */        : 13;
+    const volatile uint32_t /* unused */        : 16;
+    const volatile uint32_t dmaUnderrunFlag     :  1;
+    const volatile uint32_t calibGreaterEqual   :  1;
+    const volatile uint32_t busyWritingSample   :  1;
+
+    const volatile uint32_t /* unused */        : 16;
+    volatile uint32_t offsetTrim                :  4;
+    const volatile uint32_t /* unused */        : 12;
+
+    const volatile uint32_t /* unused */        : 16;
+    volatile outputSelect selectOutput          :  2;
+    volatile uint32_t sampleHoldMode            :  1;
+    const volatile uint32_t /* unused */        : 13;
+
+    const volatile uint32_t /* unused */        : 32;
+
+    volatile uint32_t dataSample                : 10;
+    const volatile uint32_t /* unused */        : 22;
+
+    const volatile uint32_t /* unused */        : 16;
+    volatile uint32_t holdTime                  : 10;
+    const volatile uint32_t /* unused */        :  6;
+
+    const volatile uint32_t /* unused */        : 16;
+    volatile uint32_t refreshTime               :  8;
+    const volatile uint32_t /* unused */        :  8;
+};
+
+
+template <typename T>
+class DAC : McuModule<T>
 {
     public:
     DAC()
     {
-        baseAddr = ((dacType*)((uint32_t)0x40007400));
+        static_assert(std::is_base_of<DacChannel, T>::value, "Type not equal!");
+        baseAddr = ((T*)(DAC1_BASE));
         enable();
     }
+
+    typedef uint16_t testType;
 
     void enable(){RCC->APB1LENR |= RCC_APB1LENR_DAC12EN;}
     void disable(){RCC->APB1LENR &= ~(RCC_APB1LENR_DAC12EN);}
@@ -196,10 +196,10 @@ class DAC //: McuModule<dacType>
     void enableChannel2(){baseAddr->channel2.enable = true;}
     void disableChannel1(){baseAddr->channel1.enable = false;}
     void disableChannel2(){baseAddr->channel2.enable = false;}
-
-    volatile dacType& Register = *baseAddr;
+    void setChannel1Out(uint16_t val){baseAddr->channel1.dataHoldR = val;}
+    void test(uint16_t val){baseAddr->channel1.dataHoldDualR = val;}
 
     private:
-    dacType* baseAddr; 
+    T* baseAddr;
 };
 }

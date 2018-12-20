@@ -9,7 +9,7 @@ template<typename T>
 class McuModule
 {
     protected:
-    T* baseAddr;
+    volatile T* baseAddr;
 };
 
 template<typename T>
@@ -22,6 +22,5 @@ class UtilModule
 struct sample12
 {
     uint16_t sample : 12;
-    uint16_t        :  4;
 };
 }
